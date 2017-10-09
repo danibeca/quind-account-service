@@ -63,9 +63,10 @@ $app->singleton(
 //    App\Http\Middleware\ExampleMiddleware::class
 // ]);
 
-// $app->routeMiddleware([
-//     'auth' => App\Http\Middleware\Authenticate::class,
-// ]);
+$app->routeMiddleware([
+    'cors' => App\Http\Middleware\LogActivity::class,
+    'log' => App\Http\Middleware\LogActivity::class
+]);
 
 /*
 |--------------------------------------------------------------------------
