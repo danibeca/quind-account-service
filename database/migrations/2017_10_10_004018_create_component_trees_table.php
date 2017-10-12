@@ -3,8 +3,9 @@
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Kalnoy\Nestedset\NestedSet;
 
-class CreateComponentUserTable extends Migration
+class CreateComponentTreesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,14 +14,14 @@ class CreateComponentUserTable extends Migration
      */
     public function up()
     {
-        Schema::create('component_user', function (Blueprint $table) {
-            $table->integer('user_id')->unsigned();
+        Schema::create('component_trees', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('component_id')->unsigned();
+            NestedSet::columns($table);
             $table->timestamps();
 
             $table->foreign('component_id')->references('id')->on('components')->onDelete('cascade');
-            $table->primary(['user_id','component_id']);
-
+            $table->unique(['component_id','parent_id']);
         });
     }
 
@@ -31,6 +32,6 @@ class CreateComponentUserTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('component_user');
+        Schema::dropIfExists('component_trees');
     }
 }

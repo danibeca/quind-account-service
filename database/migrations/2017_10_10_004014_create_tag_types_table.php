@@ -23,10 +23,14 @@ class CreateTagTypesTable extends Migration
             array(
                 array(
                     'id'   => 1,
-                    'name' => 'Branch'
+                    'name' => 'trunk'
                 ),
                 array(
                     'id'   => 2,
+                    'name' => 'Branch'
+                ),
+                array(
+                    'id'   => 3,
                     'name' => 'Leaf'
                 )
             )

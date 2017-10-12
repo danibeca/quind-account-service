@@ -18,6 +18,7 @@ class CreateHierarchicalTagsTable extends Migration
             $table->increments('id');
             $table->string('name', 50);
             $table->integer('type_id')->unsigned();
+            $table->integer('user_id')->unsigned();
             NestedSet::columns($table);
             $table->timestamps();
 
@@ -37,7 +38,7 @@ class CreateHierarchicalTagsTable extends Migration
                 array(
                     'id'   => 2,
                     'name' => 'Sistemas',
-                    'type_id'=> 1,
+                    'type_id'=> 2,
                     '_lft' => 2,
                     '_rgt' => 5,
                     'parent_id' => 1
@@ -45,7 +46,7 @@ class CreateHierarchicalTagsTable extends Migration
                 array(
                     'id'   => 3,
                     'name' => 'Aplicaciones',
-                    'type_id'=> 2,
+                    'type_id'=> 3,
                     '_lft' => 3,
                     '_rgt' => 4,
                     'parent_id' => 2

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\ApiController;
 use App\Models\Account\Component;
+use App\Models\Account\ComponentTree;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -16,10 +17,13 @@ class ComponentController extends ApiController
      */
     public function index()
     {
-        if(Input::has('parentId')){
-            return $this->respondData(Component::find(Input::get('parentId'))->getDescendants());
+        if (Input::has('parent_id'))
+        {
+            $ids = ComponentTree::find(Input::get('parent_id'))->getDescendants()->pluck('component_id');
+            return $this->respondData(Component::whereIn('id', $ids)->get());
         }
-        return $this->respond(Component::all());
+
+        return $this->respondData(Component::all());
     }
 
     /**
@@ -31,16 +35,21 @@ class ComponentController extends ApiController
     public function store(Request $request)
     {
         $newComponent = new Component ($request->except('parent_id'));
+        $newComponent->save();
         if ($request->has('parent_id') && $request->tag_id !== 1)
         {
-            $newComponent->appendToNode(Component::find($request->parent_id))->save();
+            $newComponentTree = new ComponentTree();
+            $newComponentTree->component_id = $newComponent->id;
+            $newComponentTree->appendToNode(ComponentTree::where('component_id',$request->parent_id)->first())->save();
 
         } else
         {
-            $newComponent->saveAsRoot();
+            $newComponentTree = new ComponentTree();
+            $newComponentTree->component_id = $newComponent->id;
+            $newComponentTree->saveAsRoot();
         }
 
-        Component::fixTree();
+        ComponentTree::fixTree();
 
         return $this->respondResourceCreated($newComponent);
 

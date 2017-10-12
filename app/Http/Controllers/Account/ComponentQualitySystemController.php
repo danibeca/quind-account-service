@@ -20,7 +20,12 @@ class ComponentQualitySystemController extends ApiController
     {
         if(Input::has('resources')){
             $qa = Component::find($componentId)->qualitySystems()->get()->first();
-            return $this->respondData($qa->resources());
+            if(!is_null($qa)){
+                return $this->respondData($qa->resources());
+            }else{
+                return $this->respondData([]);
+            }
+
         }
         return $this->respondData(Component::find($componentId)->qualitySystems()->get());
     }
