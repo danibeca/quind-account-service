@@ -998,6 +998,7 @@ trait NodeTraitExt
         return $this->prevSiblings()->defaultOrder('desc')->first($columns);
     }
 
+
     /**
      * Get whether a node is a descendant of other node.
      *

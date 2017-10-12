@@ -5,7 +5,8 @@ namespace App\Utils\Helpers;
 use Illuminate\Http\Response as IlluResponse;
 use Illuminate\Support\Facades\Response;
 
-trait ResponseHelper {
+trait ResponseHelper
+{
 
     protected $statusCode = IlluResponse::HTTP_OK;
 
@@ -71,11 +72,16 @@ trait ResponseHelper {
         return Response::json($data, $this->getStatusCode(), $headers, JSON_UNESCAPED_UNICODE);
     }
 
+    public function respondData($data, $headers = [])
+    {
+        return Response::json(['data' => $data], $this->getStatusCode(), $headers, JSON_UNESCAPED_UNICODE);
+    }
+
     public function respondWithError($message)
     {
         return $this->respond([
             'error' => [
-                'message' => $message,
+                'message'    => $message,
                 'statusCode' => $this->getStatusCode()
             ]
         ]);
