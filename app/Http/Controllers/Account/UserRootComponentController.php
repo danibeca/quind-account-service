@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Account;
 
 use App\Http\Controllers\ApiController;
 use App\Models\Account\Component;
+use App\Models\Account\ComponentTree;
 use App\Models\Account\ComponentUser;
 use Illuminate\Http\Request;
 
@@ -20,7 +21,9 @@ class UserRootComponentController extends ApiController
             ->get()
             ->first()->component_id);
 
-        return $this->respond($component->root());
+        $tree = ComponentTree::where('component_id', $component->id)->get()->first();
+
+        return $this->respondData([Component::find($tree->getRoot()->component_id)]);
     }
 
 }

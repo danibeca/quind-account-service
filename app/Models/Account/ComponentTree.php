@@ -11,7 +11,7 @@ class ComponentTree extends Model
 
     protected $fillable = ['name', 'tag_id'];
 
-    public function root()
+    public function getRoot()
     {
         if(is_null($this->parent_id)){
             return $this;
