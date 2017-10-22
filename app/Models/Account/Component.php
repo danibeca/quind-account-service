@@ -15,4 +15,11 @@ class Component extends Model
     {
         return $this->belongsToMany('App\Models\QualitySystem\QualitySystem')->withPivot(['url', 'type']);
     }
+
+    public function hierarchicalTag()
+    {
+        return $this->belongsTo('App\Models\TagTree\HierarchicalTag', 'tag_id');
+    }
+
+
 }

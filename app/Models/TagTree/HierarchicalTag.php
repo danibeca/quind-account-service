@@ -11,4 +11,9 @@ class HierarchicalTag extends Model
 
     protected $fillable = ['name', 'type_id'];
 
+    public function typeTag()
+    {
+        return $this->belongsTo('App\Models\TagTree\TagType','type_id');
+    }
+
 }

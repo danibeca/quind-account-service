@@ -15,11 +15,19 @@ $router->group([
 
 
     $router->group([
+        'prefix'    => '/accounts',
+        'namespace' => 'Account'], function () use ($router) {
+        $router->post('/', ['uses' => 'AccountController@store']);
+    });
+
+    $router->group([
         'prefix'    => '/roottags',
         'namespace' => 'TagTree'], function () use ($router) {
         $router->get('/', ['uses' => 'RootTagController@index']);
         $router->post('/', ['uses' => 'RootTagController@store']);
     });
+
+
 
     $router->group([
         'prefix'    => '/components',
