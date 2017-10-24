@@ -30,7 +30,7 @@ class ComponentController extends ApiController
             }
 
             if(Input::has('no_leaves')){
-                $result = $result->diffAssoc($parent->getLeaves());
+                $result = $result->diff($parent->getLeaves());
             }
 
             return $this->respondData(array_values($result->sortBy('tag_id')->toArray()));
