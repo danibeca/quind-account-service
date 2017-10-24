@@ -35,28 +35,14 @@ $router->group([
         $router->get('/', ['uses' => 'ComponentController@index']);
         $router->post('/', ['uses' => 'ComponentController@store']);
         $router->get('/{id:[\d]+}', ['as' => 'component.show', 'uses' => 'ComponentController@show']);
-        $router->put('/{id:[\d]+}', ['as' => 'component.update', 'uses' => 'ComponentController@update']);
+        $router->put(   '/{id:[\d]+}', ['as' => 'component.update', 'uses' => 'ComponentController@update']);
         $router->delete('/{id:[\d]+}', ['as' => 'component.destroy', 'uses' => 'ComponentController@destroy']);
 
 
         $router->get('/{id:[\d]+}/users', ['uses' => 'ComponentUserController@index']);
         $router->post('/{id:[\d]+}/users', ['uses' => 'ComponentUserController@store']);
 
-        $router->get('/{id:[\d]+}/qas', ['uses' => 'ComponentQualitySystemController@index']);
-        $router->post('/{id:[\d]+}/qas', ['uses' => 'ComponentQualitySystemController@store']);
 
-    });
-
-    $router->group([
-        'prefix'    => '/qas',
-        'namespace' => 'QualitySystem'], function () use ($router) {
-        $router->get('/', ['uses' => 'QualitySystemController@index']);
-    });
-
-    $router->group([
-        'prefix'    => '/qas/validate',
-        'namespace' => 'QualitySystem'], function () use ($router) {
-        $router->get('/', ['uses' => 'QualitySystemController@validate2']);
     });
 
 
@@ -66,4 +52,5 @@ $router->group([
 
         $router->get('/{id:[\d]+}/croot', ['uses' => 'UserRootComponentController@index']);
     });
+
 });

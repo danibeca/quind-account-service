@@ -2,7 +2,7 @@
 
 namespace App\Utils\Transformers;
 
-use Carbon\Carbon;
+
 
 class ComponentTransformer extends Transformer
 {
@@ -14,7 +14,7 @@ class ComponentTransformer extends Transformer
             'id'  => $component->id,
             'name'  => $component->name,
             'type_id' => $component->hierarchicalTag->typeTag->id,
-            'parent_id' => $component->hierarchicalTag->parent_id
+            'parent_id' => $component->componentTree->parent_id
         ];
     }
 }

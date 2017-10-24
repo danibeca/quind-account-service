@@ -17,13 +17,22 @@ class UserRootComponentController extends ApiController
      */
     public function index($userId)
     {
-        $component = Component::find(ComponentUser::where('user_id', $userId)
+        $componentUser = ComponentUser::where('user_id', $userId)
             ->get()
-            ->first()->component_id);
+            ->first();
 
-        $tree = ComponentTree::where('component_id', $component->id)->get()->first();
+        if (isset($componentUser))
+        {
+            $component = Component::find($componentUser->component_id);
 
-        return $this->respondData([Component::find($tree->getRoot()->component_id)]);
+            $tree = ComponentTree::where('component_id', $component->id)->get()->first();
+
+            return $this->respondData([Component::find($tree->getRoot()->component_id)]);
+        }
+
+        return $this->respondNotFound();
+
+
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Account;
 use App\Http\Controllers\ApiController;
 use App\Models\Account\Component;
 use App\Models\Account\ComponentTree;
+use App\Utils\Transformers\ComponentTransformer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Input;
 
@@ -19,19 +20,26 @@ class ComponentController extends ApiController
     {
         if (Input::has('parent_id'))
         {
-            $ids = ComponentTree::find(Input::get('parent_id'))->getDescendants()->pluck('component_id');
-            return $this->respondData(Component::whereIn('id', $ids)->get());
+            $node = ComponentTree::find(Input::get('parent_id'));
+            $parent = Component::find($node->component_id);
+               $ids = $node->getDescendants()->pluck('component_id');
+
+            $result = Component::whereIn('id', $ids)->get();
+            if(Input::has('self_included') && Input::get('self_included')){
+                $result = $result->push($parent);
+            }
+
+            if(Input::has('no_leaves')){
+                $result = $result->diffAssoc($parent->getLeaves());
+            }
+
+            return $this->respondData(array_values($result->sortBy('tag_id')->toArray()));
         }
 
-        return $this->respondData(Component::all());
+        return $this->respondNotFound();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function store(Request $request)
     {
         $newComponent = new Component ($request->except('parent_id'));
@@ -40,7 +48,7 @@ class ComponentController extends ApiController
         {
             $newComponentTree = new ComponentTree();
             $newComponentTree->component_id = $newComponent->id;
-            $newComponentTree->appendToNode(ComponentTree::where('component_id',$request->parent_id)->first())->save();
+            $newComponentTree->appendToNode(ComponentTree::where('component_id', $request->parent_id)->first())->save();
 
         } else
         {
@@ -51,27 +59,29 @@ class ComponentController extends ApiController
 
         ComponentTree::fixTree();
 
-        return $this->respondResourceCreated($newComponent);
+        return $this->respondResourceCreated((new ComponentTransformer())->transform($newComponent));
 
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
+
     public function show($id)
     {
+        if (Input::has('hasLeaves'))
+        {
+            $result = false;
+            $component = Component::find($id);
+            if (isset($component))
+            {
+                $result = $component->hasLeaves();
+            }
+
+            return $this->respond($result);
+        }
+
         return $this->respondData(Component::find($id));
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
-     */
+
     public function update(Request $request, $id)
     {
         $component = Component::find($id);
