@@ -33,6 +33,10 @@ class ComponentController extends ApiController
                 $result = $result->diff($parent->getLeaves());
             }
 
+            if(Input::has('only_leaves')){
+                $result = Component::find(Input::get('parent_id'))->getLeaves();
+            }
+
             return $this->respondData(array_values($result->sortBy('tag_id')->toArray()));
         }
 
