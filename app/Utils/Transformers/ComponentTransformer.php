@@ -7,10 +7,10 @@ use App\Models\Account\Component;
 
 class ComponentTransformer extends Transformer
 {
-
     public function transform($component)
     {
         $component = Component::find($component['id']);
+
         return [
             'id'        => $component->id,
             'name'      => $component->name,
