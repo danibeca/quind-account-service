@@ -99,6 +99,8 @@ class ComponentController extends ApiController
         } else
         {
             $component->update($request->all());
+            $componentTree->parent_id = $request->parent_id;
+            ComponentTree::fixTree();
         }
 
         return $this->respondResourceCreated((new ComponentTransformer())->transform($component));
