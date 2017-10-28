@@ -10,7 +10,7 @@ class ComponentTransformer extends Transformer
 
     public function transform($component)
     {
-        $component = find($component['id']);
+        $component = Component::find($component['id']);
         return [
             'id'        => $component->id,
             'name'      => $component->name,
