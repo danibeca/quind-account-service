@@ -100,6 +100,8 @@ class ComponentController extends ApiController
         {
             $component->update($request->all());
         }
+
+        return $this->respondResourceCreated((new ComponentTransformer())->transform($component));
     }
 
     /**
