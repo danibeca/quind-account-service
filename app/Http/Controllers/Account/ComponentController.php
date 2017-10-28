@@ -93,7 +93,7 @@ class ComponentController extends ApiController
         $component = Component::find($id);
         /** @var ComponentTree $componentTree */
         $componentTree = ComponentTree::where('component_id', $component->id)->get()->first();
-        if (! $componentTree->isRoot())
+        if ($componentTree->isRoot())
         {
             $component->update($request->only('name'));
         } else
