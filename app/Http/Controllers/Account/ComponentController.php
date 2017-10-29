@@ -15,7 +15,7 @@ class ComponentController extends ApiController
     {
         if (Input::has('parent_id'))
         {
-            $node = ComponentTree::find(Input::get('parent_id'));
+            $node = ComponentTree::where('component_id', Input::get('parent_id'))->get()->first();
             if($node){
                 $parent = Component::find($node->component_id);
                 $ids = $node->getDescendants()->pluck('component_id');
