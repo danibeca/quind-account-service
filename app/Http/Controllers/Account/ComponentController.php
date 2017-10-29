@@ -11,29 +11,27 @@ use Illuminate\Support\Facades\Input;
 
 class ComponentController extends ApiController
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function index()
     {
         if (Input::has('parent_id'))
         {
             $node = ComponentTree::find(Input::get('parent_id'));
             $parent = Component::find($node->component_id);
-               $ids = $node->getDescendants()->pluck('component_id');
+            $ids = $node->getDescendants()->pluck('component_id');
             /** @var Component $result */
             $result = Component::whereIn('id', $ids)->get();
-            if(Input::has('self_included') && Input::get('self_included')){
+            if (Input::has('self_included') && Input::get('self_included'))
+            {
                 $result = $result->push($parent);
             }
 
-            if(Input::has('no_leaves')){
+            if (Input::has('no_leaves'))
+            {
                 $result = $result->diff($parent->getLeaves());
             }
 
-            if(Input::has('only_leaves')){
+            if (Input::has('only_leaves'))
+            {
                 $result = Component::find(Input::get('parent_id'))->getLeaves();
             }
 
@@ -99,7 +97,8 @@ class ComponentController extends ApiController
         } else
         {
             $component->update($request->all());
-            if($request->parent_id){
+            if ($request->parent_id)
+            {
                 $componentTree->parent_id = $request->parent_id;
                 $componentTree->save();
                 ComponentTree::fixTree();
@@ -109,12 +108,6 @@ class ComponentController extends ApiController
         return $this->respondResourceCreated((new ComponentTransformer())->transform($component));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
         /** @var Component $component */
@@ -125,7 +118,8 @@ class ComponentController extends ApiController
         {
             $children = $componentTree->getDescendants();
             $parent_id = $componentTree->parent_id;
-            foreach ($children as $child){
+            foreach ($children as $child)
+            {
                 $child->parent_id = $parent_id;
                 $child->save();
             }
