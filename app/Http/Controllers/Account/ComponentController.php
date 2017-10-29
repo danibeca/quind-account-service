@@ -118,13 +118,7 @@ class ComponentController extends ApiController
         $componentTree = ComponentTree::where('component_id', $component->id)->get()->first();
         if (! $componentTree->isRoot())
         {
-            $children = $componentTree->getDescendants();
-            $parent_id = $componentTree->parent_id;
-            foreach ($children as $child)
-            {
-                $child->parent_id = $parent_id;
-                $child->save();
-            }
+            Component::whereIn('id',$componentTree->getDescendants()->pluck('component_id'))->delete();
             Component::find($id)->delete();
             ComponentTree::fixTree();
         }
