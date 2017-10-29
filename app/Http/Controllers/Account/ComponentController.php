@@ -16,27 +16,29 @@ class ComponentController extends ApiController
         if (Input::has('parent_id'))
         {
             $node = ComponentTree::find(Input::get('parent_id'));
-            $parent = Component::find($node->component_id);
-            $ids = $node->getDescendants()->pluck('component_id');
-            /** @var Component $result */
-            $result = Component::whereIn('id', $ids)->get();
-            if (Input::has('self_included') && Input::get('self_included'))
-            {
-                $result = $result->push($parent);
+            if($node){
+                $parent = Component::find($node->component_id);
+                $ids = $node->getDescendants()->pluck('component_id');
+                /** @var Component $result */
+                $result = Component::whereIn('id', $ids)->get();
+                if (Input::has('self_included') && Input::get('self_included'))
+                {
+                    $result = $result->push($parent);
+                }
+
+                if (Input::has('no_leaves'))
+                {
+                    $result = $result->diff($parent->getLeaves());
+                }
+
+                if (Input::has('only_leaves'))
+                {
+                    $result = Component::find(Input::get('parent_id'))->getLeaves();
+                }
+
+                return $this->respondData((new ComponentTransformer())->transformCollection(array_values($result->sortBy('tag_id')->toArray())));
             }
 
-            if (Input::has('no_leaves'))
-            {
-                $result = $result->diff($parent->getLeaves());
-            }
-
-            if (Input::has('only_leaves'))
-            {
-                $result = Component::find(Input::get('parent_id'))->getLeaves();
-            }
-
-            //return $this->respondData(array_values($result->sortBy('tag_id')->toArray()));
-            return $this->respondData((new ComponentTransformer())->transformCollection(array_values($result->sortBy('tag_id')->toArray())));
         }
 
         return $this->respondNotFound();
