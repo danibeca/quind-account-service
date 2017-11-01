@@ -65,7 +65,8 @@ $app->singleton(
 
 $app->routeMiddleware([
     'cors' => \Barryvdh\Cors\HandleCors::class,
-    'log' => App\Http\Middleware\LogActivity::class
+    'log' => App\Http\Middleware\LogActivity::class,
+    'auth' => App\Http\Middleware\Authenticate::class,
 ]);
 
 /*

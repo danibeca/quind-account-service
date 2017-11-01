@@ -11,7 +11,7 @@
 |
 */
 $router->group([
-    'prefix' => 'api/v1', 'middleware' => ['cors', 'log']], function () use ($router) {
+    'prefix' => 'api/v1', 'middleware' => ['auth','cors', 'log']], function () use ($router) {
 
 
     $router->group([
