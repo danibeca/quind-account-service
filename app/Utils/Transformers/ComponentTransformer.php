@@ -4,6 +4,7 @@ namespace App\Utils\Transformers;
 
 
 use App\Models\Account\Component;
+use App\Models\Account\ComponentTree;
 
 class ComponentTransformer extends Transformer
 {
@@ -17,7 +18,7 @@ class ComponentTransformer extends Transformer
             'tag_name'  => $component->hierarchicalTag->name,
             'tag_id'    => $component->hierarchicalTag->id,
             'type_id'   => $component->hierarchicalTag->typeTag->id,
-            'parent_id' => $component->componentTree->parent_id
+            'parent_id' => ComponentTree::find($component->componentTree->parent_id)->component_id
         ];
     }
 }
