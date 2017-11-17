@@ -12,9 +12,9 @@ class ComponentTransformer extends Transformer
     {
         $component = Component::find($component['id']);
         
-        $parent_id = null;
-        if(isset($component->componentTree->parent_id)){
-           $parent_id = ComponentTree::find($component->componentTree->parent_id)->component_id;
+        $parent_id = $component->componentTree->parent_id;
+        if(isset($parent_id)){
+           $parent_id = ComponentTree::find($parent_id)->component_id;
         }    
 
         return [
