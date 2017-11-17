@@ -11,6 +11,11 @@ class ComponentTransformer extends Transformer
     public function transform($component)
     {
         $component = Component::find($component['id']);
+        
+        $parent_id = null;
+        if(isset($component->componentTree->parent_id)){
+           $parent_id = ComponentTree::find($component->componentTree->parent_id)->component_id;
+        }    
 
         return [
             'id'        => $component->id,
@@ -18,7 +23,7 @@ class ComponentTransformer extends Transformer
             'tag_name'  => $component->hierarchicalTag->name,
             'tag_id'    => $component->hierarchicalTag->id,
             'type_id'   => $component->hierarchicalTag->typeTag->id,
-            'parent_id' => ComponentTree::find($component->componentTree->parent_id)->component_id
+            'parent_id' => $parent_id
         ];
     }
 }
